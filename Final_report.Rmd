@@ -1,0 +1,21 @@
+---
+title: "Project-Bladder"
+author: "Eric Brown, JP Flores, Michael Jetsupphasuk, Jess Byun"
+date: "`r format(Sys.time(), '%m/%d/%Y')`"
+output:
+  html_document: default
+  pdf_document: default
+editor_options:
+  markdown:
+    wrap: 72
+---
+
+# Introduction
+
+# **Method**
+
+# **Results**
+
+# **Discussion**
+
+# **Conclusion**
