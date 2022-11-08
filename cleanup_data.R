@@ -24,13 +24,66 @@ subset_nm <- colnames(sub_methyl[,!is.element(colnames(sub_methyl),colnames(sub_
 
 sub_methyl_2 <-sub_methyl[,!is.element(colnames(sub_methyl),subset_nm)]
 
+# This step is removing probes with row containing missing values: 102,702 probes are 
+
+library(tidyr)
+library(dplyr)
+sub_methyl_3 <- sub_methyl_2 %>% drop_na()
+
+
+##################################
+##promoter region genes###########
+##################################
+
+library(biomaRt)
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+library(GenomicFeatures)
+library(tidyverse)
+
+ensembl=useMart("ensembl")
+ensembl = useDataset("hsapiens_gene_ensembl",mart=ensembl)
+
+
+sub_methyl_3[,"Chromosome"] <- sub("^","chr",sub_methyl_3[,"Chromosome"])
+methyl.ran <- GRanges(Rle(sub_methyl_3[,"Chromosome"]),IRanges(sub_methyl_3[,"Genomic_Coordinate"],sub_methyl_3[,"Genomic_Coordinate"]))
+
+
+txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
+promoter.re <- promoters(txdb,upstream=1500,downstream=200)
+#promoter.methyl <- as.matrix(findOverlaps(methyl.ran,promoter.re))
+
+fi.cns <- c("TXID","TXCHROM","TXNAME","GENEID","TXSTART","TXEND","TXSTRAND")
+txTable <- gsub(" ","",as.matrix(biomaRt::select(txdb,keys=names(promoter.re),columns=fi.cns,keytype="TXNAME")))
+txTable <- txTable[!is.na(txTable[,2]),]
+
+map.id <- getBM(attributes=c("hgnc_symbol","entrezgene_id"),filters="entrezgene_id", values=txTable[,"GENEID"],mart=ensembl)
+mer.txTable <- unique(as.matrix(merge(txTable,map.id,by.x="GENEID",by.y="entrezgene_id")))
+rownames(mer.txTable) <- mer.txTable[,"TXNAME"]
+
+
+inter.pro.methyl <- as.matrix(findOverlaps(methyl.ran,promoter.re))
+inter.pro.methyl <- inter.pro.methyl[is.element(names(promoter.re)[inter.pro.methyl[,2]],rownames(mer.txTable)),]
+pro.met.re <- cbind(mer.txTable[names(promoter.re)[inter.pro.methyl[,2]],"hgnc_symbol"],sub_methyl_3[inter.pro.methyl[,1],c(1,3,4)])
+colnames(pro.met.re) <- c("gene","methyl","chr","pos")
+pro.met.re <- unique(pro.met.re[which(pro.met.re[,"gene"] != ""),])
+
+#head(pro.met.re)
+
+
+# for (i in 1:length(pro.met.re[,1])){
+#   ea.met.id <- pro.met.re[i,1]
+#   ea.exp.id <- pro.met.re[i,2]
+#   ea.methyl <- sub_methyl_3[sub_methyl_3[,1] == ea.exp.id,]
+#   ea.exp <- ea.exp.id
+
+##################################
+##bumphunters###########
+##################################
 
 
 
-
-
-
-
-
-
+pos <- list(pos1=seq(1,1000,35),pos2=seq(2001,3000,35),pos3=seq(1,1000,50))
+chr <- rep(paste0("chr",c(1,1,2)), times = sapply(pos,length))
+pos <- unlist(pos, use.names=FALSE)
+cl <- clusterMaker(chr, pos, maxGap = 300)
 
