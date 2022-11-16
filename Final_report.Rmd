@@ -1,6 +1,6 @@
 ---
-title: "Project-Bladder"
-author: "Eric Brown, JP Flores, Michael Jetsupphasuk, Jess Byun"
+title: "The role of DNA methylated genes in bladder cancer tumor recurrence"
+author: "Jess Byun, Michael Jetsupphasuk, JP Flores, Eric Brown"
 date: "`r format(Sys.time(), '%m/%d/%Y')`"
 output:
   html_document: default
@@ -14,42 +14,42 @@ editor_options:
 
 2.  **Introduction**
 
-3.  **Method**
+3.  **Materials and Methods**
 
-    3.1 Data
+    I.  Research Participants
 
-    3.2 Pre-processing
+    II. DNA methylation data pre-processing
 
-    3.3 Limma()
+    III. Differential methylation analysis
 
-    3.4 bumphunter()
-
-    3.5 Gene set enrichment analysis
-
-    3.6 Network analysis
+    IV. Functional enrichment and network analysis
 
 4.  **Results**
 
-    4.1 Limma
+    I.  **Overview of the study cohort**
 
-    4.2 bumphunter
+    II. **Differential DNA methylation analysis in the two subgroups**
 
-    4.3 functional study
+        i.  **Linear**
 
-    4.4 case study
+        ii. **Bumphunter**
+
+            a.  **Minfi**
+
+            b.  **Champ**
 
 5.  **Discussion**
 
-    5.1Recap
+    I.  **Recap**
 
-    5.2 Observations
+    II. **Observation**
 
-    5.3 Limitation
+    III. **Limitation**
 
-    5.4 Future work
+    IV. **Future work**
 
 6.  **Conclusion**
 
-    `draw interesting and reasonable conclusions from the analyses? does the conclusion leave the reader with insight into the methods compared / evaluated`
+7.  **References**
 
-7.  **Reference**
+### 
