@@ -10,12 +10,46 @@ editor_options:
     wrap: 72
 ---
 
-# Introduction
+1.  **Abstract**
 
-# **Method**
+2.  **Introduction**
 
-# **Results**
+3.  **Method**
 
-# **Discussion**
+    3.1 Data
 
-# **Conclusion**
+    3.2 Pre-processing
+
+    3.3 Limma()
+
+    3.4 bumphunter()
+
+    3.5 Gene set enrichment analysis
+
+    3.6 Network analysis
+
+4.  **Results**
+
+    4.1 Limma
+
+    4.2 bumphunter
+
+    4.3 functional study
+
+    4.4 case study
+
+5.  **Discussion**
+
+    5.1Recap
+
+    5.2 Observations
+
+    5.3 Limitation
+
+    5.4 Future work
+
+6.  **Conclusion**
+
+    `draw interesting and reasonable conclusions from the analyses? does the conclusion leave the reader with insight into the methods compared / evaluated`
+
+7.  **Reference**
