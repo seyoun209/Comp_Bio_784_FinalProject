@@ -80,6 +80,11 @@ top.table$gene = genes.select
 write_csv(genes.final, 'diff_meth_genes.csv')
 
 
+# looking at residual plots
+row_num = 5
+fitted.values = limma.fit.eb$design %*% limma.fit.eb$coefficients[row_num,]
+plot(fitted.values, working.data[row_num, 2:ncol(working.data)])
+
 
 # Plots -------------------------------------------------------------------
 
@@ -109,7 +114,8 @@ working.data.select = working.data %>% filter(gene %in% genes.select)
 pc.0 = prcomp(t(working.data.select[,2:ncol(working.data.select)]))
 dat = data.frame(pc.0$x[,1:2], tumor = patient$tumor_status)
 ggplot(dat, aes(x=PC1, y=PC2, col=tumor)) +
-  geom_point()
+  geom_point() +
+  labs(title='pca on 135 identified genes')
 
 
 # mRNA --------------------------------------------------------------------
@@ -130,7 +136,8 @@ mrna[,2:ncol(mrna)] = log(1+mrna[,2:ncol(mrna)])
 pc.1 = prcomp(t(mrna[,2:ncol(mrna)]))
 dat = data.frame(pc.1$x[,1:2], tumor = patient$tumor_status)
 ggplot(dat, aes(x=PC1, y=PC2, col=tumor)) +
-  geom_point()
+  geom_point() +
+  labs(title='pca on transformed gene expression, all genes')
 
 # subset to match 135 identified genes
 # only 120 in the dataset
@@ -141,7 +148,8 @@ mrna = mrna %>%
 pc.2 = prcomp(t(mrna[,2:ncol(mrna)]))
 dat = data.frame(pc.2$x[,1:2], tumor = patient$tumor_status)
 ggplot(dat, aes(x=PC1, y=PC2, col=tumor)) +
-  geom_point()
+  geom_point() +
+  labs(title='pca on transformed gene expression, 135 identified genes')
 
 
 # correlation b/t gene expression and diff methylation
