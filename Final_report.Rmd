@@ -68,12 +68,12 @@ library(GenomicFeatures)
 library(tidyverse)
 library(ChAMP)
 
-#ensembl=useMart("ensembl")
-#ensembl = useDataset("hsapiens_gene_ensembl",mart=ensembl)
+ensembl=useMart("ensembl")
+ensembl = useDataset("hsapiens_gene_ensembl",mart=ensembl)
 #save(ensembl,file="ensembl"
 
 #If you havent make the ensemble, please run useMART and create ensemble
-load("ensembl")
+# load("ensembl")
 sub_methyl_3[,"Chromosome"] <- sub("^","chr",sub_methyl_3[,"Chromosome"])
 methyl.ran <- GRanges(Rle(sub_methyl_3[,"Chromosome"]),IRanges(sub_methyl_3[,"Genomic_Coordinate"],sub_methyl_3[,"Genomic_Coordinate"]))
 
@@ -260,9 +260,9 @@ mrna = read_delim('01.data/data_mrna_seq_v2_rsem.txt')
 
 # subset to match working.data
 mrna = mrna %>%
-  rename(gene = Hugo_Symbol) %>%
-  rename_all(function(x) gsub('-01$', '', x)) %>%
-  select_at(colnames(working.data))
+  dplyr::rename(gene = Hugo_Symbol) %>%
+  dplyr::rename_all(function(x) gsub('-01$', '', x)) %>%
+  dplyr::select_at(colnames(working.data))
 
 # do log(1+x) transform
 mrna[,2:ncol(mrna)] = log(1+mrna[,2:ncol(mrna)])
