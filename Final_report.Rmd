@@ -3,8 +3,8 @@ title: "The role of DNA methylated genes in bladder cancer tumor recurrence"
 author: "Jess Byun, Michael Jetsupphasuk, JP Flores, Eric Brown"
 date: "`r format(Sys.time(), '%m/%d/%Y')`"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 editor_options:
   markdown:
     wrap: 72
@@ -510,56 +510,6 @@ ggplot(newpath, aes(x = pathwaynm , y = pathway,
 **Figure 4**:CDH5 
 </center>
 
-
-```{r message=FALSE}
-
-#geneset <- c("PRKCZ","CDH5","CTNNB1","APC2","TLE2)
-load("grset")
-load("promoter_met_mat")
-rsem <- fread("01.data/data_mrna_seq_v2_rsem.txt.gz") |> as.data.frame()
-# We can add any genes are interesting. 
-geneset <- c("CDH5")
-tumor_free <- assay(grset)[,which(grset$PersonNeoplasmStatus == "TUMORFREE" )]
-withtumor <- assay(grset)[,which(grset$PersonNeoplasmStatus == "WITHTUMOR" )]
-ppi_gene_mat <- promoter_met_mat[is.element(promoter_met_mat[,2],geneset),]
-
-for (i in 1:length(geneset)){
-  onegene <- ppi_gene_mat[which(ppi_gene_mat[,2] == geneset[i]),]
-  cpgid <- rownames(onegene)
-  tfree_subset <- tumor_free[is.element(rownames(tumor_free),cpgid),]
-  wtiht_subset <- withtumor[is.element(rownames(withtumor),cpgid),]
-  rowmean_control <- cbind(t(rbind(rowMeans(tfree_subset))),rep("tumor_free"))
-  rowmean_case <- cbind(t(rbind(rowMeans(wtiht_subset))),rep("with_tumor"))
-  combine.mat <- rbind(rowmean_control,rowmean_case) %>% as.data.frame()
-  colnames(combine.mat) <- c("mean_of_beta","group")
-  p <- ggplot(combine.mat, aes(x=combine.mat$group, y=as.double(combine.mat$mean_of_beta),fill=group)) + geom_boxplot()+scale_fill_brewer(palette="Blues")+theme_classic()
-  png(paste("/pine/scr/s/e/seyoun/project_784/Comp_Bio_784_FinalProject/03.plots","/",geneset[i],".png",sep=""))
-  print(p)
-  dev.off()
-}
-
-for (i in 1:length(geneset)){
-  rsem_subset <- rsem[is.element(rsem[,1],geneset[i]),]
-  rsem_test <- t(rsem_subset[-c(1:2)])
-  onegene <- ppi_gene_mat[which(ppi_gene_mat[,2] == geneset[i]),]
-  cpgid <- rownames(onegene)
-  tfree_subset <- tumor_free[is.element(rownames(tumor_free),cpgid),]
-  wtiht_subset <- withtumor[is.element(rownames(withtumor),cpgid),]
-  colmean_control <- cbind(t(rbind(colMeans(tfree_subset))),rep("tumor_free"))
-  colmean_case <- cbind(t(rbind(colMeans(wtiht_subset))),rep("with_tumor"))
-  combine.mat <- rbind(colmean_control,colmean_case) %>% as.data.frame()
-  combinedall <- merge(combine.mat,rsem_test,by='row.names',all.x=FALSE) %>% as.data.frame()
-  colnames(combinedall) <- c("sample","beta","group","expression")
-  p <- ggplot(combinedall, aes(x=as.double(combinedall$beta), y=as.double(combinedall$expression),color=combinedall$group)) + geom_point()+geom_smooth(method=lm, se=FALSE)+scale_color_brewer(palette="Paired")+theme_minimal()
-  png(paste("/pine/scr/s/e/seyoun/project_784/Comp_Bio_784_FinalProject/03.plots","/",geneset[i],"corr",".png",sep=""))
-  print(p)
-  dev.off()
-}
-```
-
-![](03.plots/CDH5.png)
-
-![](03.plots/CDH5corr.png)
 
 5.  **Discussion**
 
