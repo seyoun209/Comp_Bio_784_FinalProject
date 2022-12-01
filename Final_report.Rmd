@@ -98,13 +98,11 @@ inter.pro.methyl <- inter.pro.methyl[is.element(names(promoter.re)[inter.pro.met
 pro.met.re <- cbind(mer.txTable[names(promoter.re)[inter.pro.methyl[,2]],"hgnc_symbol"],sub_methyl_3[inter.pro.methyl[,1],c(1,3,4)])
 colnames(pro.met.re) <- c("gene","methyl","chr","pos")
 pro.met.re <- unique(pro.met.re[which(pro.met.re[,"gene"] != ""),])
-
 #Final pro.met.re contains gene name, methylation id, chromosome, and position. 
 
 ```
 
 III. Differential methylation analysis
-
 
 ```{r message=FALSE}
 #Bumphunter()
@@ -131,9 +129,9 @@ deseignmatrix <- model.matrix(~status+sex+age)
 #we use sex and age for covariates and 10% difference between the two groups
 
 dmrs <- bumphunter(grset, design =deseignmatrix, type="Beta",cutoff=0.1)
+save(dmrs,file="dmrs")
 head(dmrs$table)
 ```
-
 
 ```{r}
 library(limma)
@@ -249,7 +247,7 @@ pc.0 = prcomp(t(working.data.select[,2:ncol(working.data.select)]))
 dat = data.frame(pc.0$x[,1:2], tumor = patient$tumor_status)
 ggplot(dat, aes(x=PC1, y=PC2, col=tumor)) +
   geom_point() +
-  labs(title='pca on 135 identified genes')
+  labs(title='pca on 128 identified genes')
 ```
 
 ```{r}
@@ -276,7 +274,7 @@ mrna[,2:ncol(mrna)] = log(1+mrna[,2:ncol(mrna)])
 ```
 
 ```{r}
-# subset to match 135 identified genes
+# subset to match 128 identified genes
 # only 120 in the dataset
 mrna = mrna %>%
   filter(gene %in% genes.select)
@@ -307,9 +305,82 @@ ggplot(data=dat, aes(x=diff_meth, y=gene_exp)) +
 
 ```
 
+
+
+
 IV. Functional enrichment and network analysis
 
-```{r}
+```{r message=FALSE}
+#Finding genes in the DMR region
+load("dmrs")
+txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
+load("ensembl")
+bumphunter_gr <- GRanges(Rle(dmrs$table[,"chr"]),IRanges(dmrs$table[,"start"],dmrs$table[,"end"]+20000))
+gene_list <- subsetByOverlaps(genes(txdb),bumphunter_gr)
+map_ids <- getBM(attributes=c("hgnc_symbol","entrezgene_id"),filters="entrezgene_id", values=gene_list$gene_id,mart=ensembl)
+
+map_ids #There are 15 genes identified in DMR region
+
+#those are the genes that limma and bumphunter overlaps
+intersect(top.table$gene,map_ids$hgnc_symbol)
+```
+```{r message=FALSE}
+go <- fread("go.txt",sep ="\t", header = TRUE, stringsAsFactors = FALSE)
+newgo <- cbind(go,do.call(rbind,lapply(strsplit(go$members_input_overlap_geneids,";") ,function(y)length(y))))
+newgo$Generatio <- newgo$V1/newgo$size
+newgo <- newgo  %>% as.data.frame
+
+path <- fread("path.txt", sep ="\t", header = TRUE, stringsAsFactors = FALSE)
+newpath <- cbind(path,do.call(rbind,lapply(strsplit(path$members_input_overlap_geneids,";") ,function(y)length(y))))
+newpath$Generatio <- newpath$V1/newpath$size
+ newpath$pathwaynm <- c(rep("patwhay"))
+newpath <- newpath  %>% as.data.frame
+
+par(mfrow=c(1,2))
+
+
+
+# import package
+library("ggplot2")
+
+# create fake data
+set.seed(1024) # keep reproducibility
+go <- paste0("GO", sample(1000:2000, 5))
+data <- data.frame("GOs" = rep(go, 2), 
+                   "Condition" = rep(c("A", "B"), each = 5),
+                   "GeneRatio" = 1 / sample(10, 10), 
+                   "p.adjust" = 0.05 / sample(10, 10))
+
+library(ggpubr)
+# plot: Go
+
+
+ggplot(newgo, aes(x = newgo[,"term_category"], y = newgo[,"term_name"], 
+	color = as.double(newgo[,2]), size = as.double(newgo[,"Generatio"]))) +
+	geom_point() +
+	scale_color_gradient(low = "red", high = "blue") +
+	theme_bw() +
+	ylab("") +
+  	xlab("") +
+   	ggtitle("GO enrichment analysis")+
+	labs(size="Generatio", colour="q-value")
+
+
+
+# plot: pathway
+
+ggplot(newpath, aes(x = pathwaynm , y = pathway, 
+	color = as.double(newpath[,2]), size = as.double(newpath[,"Generatio"]))) +
+	geom_point() +
+	scale_color_gradient(low = "red", high = "blue") +
+	theme_bw() +
+	ylab("") +
+  	xlab("") +
+   	ggtitle("Pathway enrichment analysis")+
+	labs(size="Generatio", colour="q-value")
+
+
+
 
 ```
 
@@ -324,10 +395,60 @@ IV. Functional enrichment and network analysis
 
         ii. **Bumphunter**
 
-            a.  **Minfi**
+    III. **Functional enrichment analysis and network**
+    III. **Case study**
+    
+```{r message=FALSE}
 
-            b.  **Champ**
+#geneset <- c("PRKCZ","CDH5","CTNNB1","APC2","TLE2)
+load("grset")
+load("promoter_met_mat")
+rsem <- fread("01.data/data_mrna_seq_v2_rsem.txt.gz") |> as.data.frame()
+# We can add any genes are interesting. 
+geneset <- c("CDH5")
+tumor_free <- assay(grset)[,which(grset$PersonNeoplasmStatus == "TUMORFREE" )]
+withtumor <- assay(grset)[,which(grset$PersonNeoplasmStatus == "WITHTUMOR" )]
+ppi_gene_mat <- promoter_met_mat[is.element(promoter_met_mat[,2],geneset),]
 
+for (i in 1:length(geneset)){
+  onegene <- ppi_gene_mat[which(ppi_gene_mat[,2] == geneset[i]),]
+  cpgid <- rownames(onegene)
+  tfree_subset <- tumor_free[is.element(rownames(tumor_free),cpgid),]
+  wtiht_subset <- withtumor[is.element(rownames(withtumor),cpgid),]
+  rowmean_control <- cbind(t(rbind(rowMeans(tfree_subset))),rep("tumor_free"))
+  rowmean_case <- cbind(t(rbind(rowMeans(wtiht_subset))),rep("with_tumor"))
+  combine.mat <- rbind(rowmean_control,rowmean_case) %>% as.data.frame()
+  colnames(combine.mat) <- c("mean_of_beta","group")
+  p <- ggplot(combine.mat, aes(x=combine.mat$group, y=as.double(combine.mat$mean_of_beta),fill=group)) + geom_boxplot()+scale_fill_brewer(palette="Blues")+theme_classic()
+  png(paste("/pine/scr/s/e/seyoun/project_784/Comp_Bio_784_FinalProject/03.plots","/",geneset[i],".png",sep=""))
+  print(p)
+  dev.off()
+}
+
+for (i in 1:length(geneset)){
+  rsem_subset <- rsem[is.element(rsem[,1],geneset[i]),]
+  rsem_test <- t(rsem_subset[-c(1:2)])
+  onegene <- ppi_gene_mat[which(ppi_gene_mat[,2] == geneset[i]),]
+  cpgid <- rownames(onegene)
+  tfree_subset <- tumor_free[is.element(rownames(tumor_free),cpgid),]
+  wtiht_subset <- withtumor[is.element(rownames(withtumor),cpgid),]
+  colmean_control <- cbind(t(rbind(colMeans(tfree_subset))),rep("tumor_free"))
+  colmean_case <- cbind(t(rbind(colMeans(wtiht_subset))),rep("with_tumor"))
+  combine.mat <- rbind(colmean_control,colmean_case) %>% as.data.frame()
+  combinedall <- merge(combine.mat,rsem_test,by='row.names',all.x=FALSE) %>% as.data.frame()
+  colnames(combinedall) <- c("sample","beta","group","expression")
+  p <- ggplot(combinedall, aes(x=as.double(combinedall$beta), y=as.double(combinedall$expression),color=combinedall$group)) + geom_point()+geom_smooth(method=lm, se=FALSE)+scale_color_brewer(palette="Paired")+theme_minimal()
+  png(paste("/pine/scr/s/e/seyoun/project_784/Comp_Bio_784_FinalProject/03.plots","/",geneset[i],"corr",".png",sep=""))
+  print(p)
+  dev.off()
+}
+```
+
+![](03.plots/CDH5.png )
+
+![](03.plots/CDH5corr.png )
+
+    
 5.  **Discussion**
 
     I.  **Recap**
@@ -342,4 +463,3 @@ IV. Functional enrichment and network analysis
 
 7.  **References**
 
-### 
