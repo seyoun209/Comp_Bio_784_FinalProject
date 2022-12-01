@@ -1,0 +1,9 @@
+p-value	q-value	pathway	source	external_id	members_input_overlap	members_input_overlap_geneids	size	effective_size
+0.000664578	0.079482161	Myogenesis	Reactome	R-HSA-525793	CTNNB1; MYOD1; TCF12	4654; 6938; 1499	29	29
+0.000837005	0.079482161	CDC42 signaling events	PID	cdc42_pathway	CTNNB1; PRKCZ; EXOC7; CDC42BPA	1499; 23265; 5590; 8476	71	71
+0.001860229	0.079482161	Apoptotic cleavage of cell adhesion  proteins	Reactome	R-HSA-351906	CTNNB1; DSG3	1499; 1830	11	11
+0.002190432	0.079482161	VEGFA-VEGFR2 Pathway	Reactome	R-HSA-4420097	CTNNB1; PRKCZ; CDH5; NCK2	8440; 5590; 1003; 1499	92	92
+0.002567378	0.079482161	Type II diabetes mellitus - Homo sapiens (human)	KEGG	path:hsa04930	CACNA1B; PRKCZ; SOCS3	774; 9021; 5590	46	46
+0.002567378	0.079482161	Insulin Pathway	PID	insulin_pathway	PRKCZ; EXOC7; NCK2	8440; 5590; 23265	46	46
+0.002965764	0.079482161	Signaling by VEGF	Reactome	R-HSA-194138	CTNNB1; PRKCZ; CDH5; NCK2	5590; 1003; 1499; 8440	100	100
+0.003042379	0.079482161	Regulation of IFNG signaling	Reactome	R-HSA-877312	SOCS3; IFNGR2	3460; 9021	14	14

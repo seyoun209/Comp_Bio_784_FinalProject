@@ -1,0 +1,11 @@
+p-value	q-value	term_goid	term_category	term_level	term_name	members_input_overlap	members_input_overlap_geneids	size	effective_size
+4.95E-05	0.001237399	GO:0004993	m	5	G protein-coupled serotonin receptor activity	3355; 284433; 26538; 26539	OR10H2; HTR1F; OR10H1; OR10H5	34	34
+4.95E-05	0.002375806	GO:0099589	m	4	serotonin receptor activity	3355; 284433; 26538; 26539	OR10H2; HTR1F; OR10H1; OR10H5	34	34
+0.000104644	0.002511452	GO:0099528	m	4	G protein-coupled neurotransmitter receptor activity	3355; 284433; 26538; 26539	OR10H2; HTR1F; OR10H1; OR10H5	41	41
+0.000246584	0.003082295	GO:0008227	m	5	G protein-coupled amine receptor activity	3355; 284433; 26538; 26539	OR10H2; HTR1F; OR10H1; OR10H5	51	51
+4.95E-05	0.014155845	GO:0098664	b	4	G protein-coupled serotonin receptor signaling pathway	3355; 284433; 26538; 26539	OR10H2; HTR1F; OR10H1; OR10H5	34	34
+0.000917237	0.014675788	GO:0030159	m	4	receptor signaling complex scaffold activity	917; 8440; 64210	MMS19; NCK2; CD3G	32	32
+8.58E-05	0.016040817	GO:0007210	b	3	serotonin receptor signaling pathway	3355; 284433; 26539; 26538	OR10H2; HTR1F; OR10H1; OR10H5	39	39
+0.000670936	0.03623054	GO:0030594	m	3	neurotransmitter receptor activity	3355; 284433; 26539; 353174; 26538	ZACN; OR10H2; HTR1F; OR10H1; OR10H5	116	116
+0.000212094	0.045388141	GO:0006772	b	5	thiamine metabolic process	8277; 79178	TKTL1; THTPA	4	4
+0.001895575	0.045493805	GO:0032947	m	2	protein-containing complex scaffold activity	917; 8440; 64210	MMS19; NCK2; CD3G	41	41
