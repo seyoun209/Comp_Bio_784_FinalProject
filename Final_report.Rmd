@@ -595,6 +595,11 @@ This study was inherently exploratory since associations were examined. It is un
 Future work may use richer datasets and different analyses to address the above limitations.
 
 
+# Conclusion
+
+Using publicly available clinical and genetic tumor data from 368 patients with bladder urothelial cancer, we performed differential methylation analysis using limma and bumphunter. We identified differentially methylated genes by tumor status and performed functional enrichment analysis. Fifteen genes were identified, fourteen of which were protein-coding genes. Eleven genes were strongly related to bladder cancer and nine of these genes overlap with our limma results. We intersected this with RNA-seq expression data and identified 134 significant genes using ConsensusPathDB and revealed eight critical pathways, the most compelling being the VEGFA-VEGFR2 pathway. Using the STRING database, we constructed a protein-protein interaction (PPI) network and identified four genes functionally grouped into the VEGFA-VEGFR2  pathway. 
+
+
 # References
 
 
