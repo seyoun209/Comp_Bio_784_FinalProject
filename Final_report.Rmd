@@ -36,21 +36,21 @@ theme_set(theme_bw())
 
 # Abstract
 
+Despite advances in bladder cancer treatment, cancer mortality rates have not changed significantly over decades. One of the critical clinical signs of mortality and recurrence is muscle invasiveness. Eighty percent of bladder cancer is due to nonmuscle invasive bladder cancer (NMBIC), and this subgroup has a high recurrence rate, but muscle-invasive bladder cancer (MIBC) has been studied less. Therefore, this study aimed to examine bladder cancer tumor recurrence in a broader spectrum to identify methylation changes. Using two different linear model algorithms (i.e., limma and bumphunter), we identified 128 and 15 differentially methylated genes, respectively. We found that these combined gene set significantly affected the VEGF signaling pathway. These results suggest opportunities for better treatment strategies for bladder cancer recurrences on molecular features. 
+
 # Introduction
+
+Bladder cancer is a complex phenotype dependent on a variety of factors, including genetics [1]–[3], exposure to environmental chemicals [4], [5], and psychosocial stressors. Despite advances in bladder cancer treatment over the past two decades, bladder cancer mortality has not decreased at comparable rates relative to other cancers, such as prostate, breast, lung, and colon cancer [6]. Disparities are stark in bladder cancer incidence rates, as men are 4 times more at risk of being affected by bladder cancer than women [7]. Bladder cancer is classified into two big categories based on tumor invasion. One is the most common form, nonmuscle invasive bladder cancer (NMIBC), which occurs in about 70-80% of bladder cancer cases, and muscle-invasive bladder cancer (MIBC), which occurs in about 20-30% [8]. Due to a large portion of the incidence being due to NMIBC, there is increasing evidence supporting recurrence changes due to chromosome changes and gene mutation [9]. Although MIBC still has shown the incidence of one-third of bladder cancer, molecular profiling has been less studied. Therefore, it is important to understand the broad spectrum of bladder cancer recurrence in genetic components. 
+
+Epigenetic alterations have been suggested to be critical to the underlying etiology of bladder cancer and bladder cancer subtypes [10], [11]. Epigenetic alterations, specifically DNA methylation, may conspire with genetic alterations to induce the bladder cancer phenotype and its subsequent recurrence [12]. Previous research has not identified a bonafide DNA methylation biomarker for bladder cancer, specifically for tumor recurrence. The objective of this study was to identify methylation differences in bladder cancer recurrence based on genomic alteration (tumor status) and to consider how the differentially methylated genes may change the gene expression. 
 
 # Materials and Methods
 
 ## Research Participants
 
-The methylation array pre-processed beta value was available via the GDC
-data portal (Data release 35.0)[1], and RSEM gene expression and
-clinical patient data were available from cBioPortal.[2]
+The methylation array pre-processed beta value was available via the GDC data portal (Data release 35.0) [13], and RSEM gene expression and clinical patient data were available from cBioPortal [14].
 
-We reviewed the clinical and genetic tumor data of 412 patients with
-bladder urothelial cancer obtained from The Cancer Genome Atlas (TCGA).
-We excluded patients with missing tumor status and selected only patients when RSEM gene
-expression was available. Of the 412 patients, 368 patients
-were considered in this analysis. 
+We reviewed the clinical and genetic tumor data of 412 patients with bladder urothelial cancer obtained from The Cancer Genome Atlas (TCGA). We excluded patients with missing tumor status and selected only patients where RSEM gene expression was available. Of the 412 patients, 368 patients were considered in this analysis.
 
 The below table summarizes some summary statistics of the study sample. Patients in the sample tended to be older, male, and tumor free. 
 
@@ -68,7 +68,7 @@ The below table summarizes some summary statistics of the study sample. Patients
 | Tumor Free | 234 (63.59%)  |
 | With Tumor | 134 (36.41%)  |
 
-**Table1** Clinical features of a patient with bladder urothelial
+**Table 1**: Clinical features of patients with bladder urothelial
 carcinoma in TCGA
 
 </center>
@@ -77,7 +77,7 @@ carcinoma in TCGA
 ## DNA methylation data pre-processing
 
 Bladder cancer recurrence was defined based on the tumor status
-previously described by Shen et al.[3] In this study, we classified the
+previously described by Shen et al. [15] In this study, we classified the
 recurrence status based on the neoplasm tumor status column in the
 patient data. The term "With Tumor" represents the persistence of the
 tumor, but not a new tumor event, and is classified as disease
@@ -87,17 +87,7 @@ recurrence. It is important to note that "tumor-free" does not mean
 in the past and/or present. Furthermore, "tumor-free" specifies that the
 tumor cannot be measured and that there is still a chance of recurrence.
 
-The given methylation level was quantified and calculated as
-$\beta=\frac{\mu}{(M+U+\alpha)}$ where M and U denote the methylated and
-unmethylated signals, respectively, and $\alpha$ represents an offset value. The given
-gene expression level was quantified by TPM and normalized using the
-`RSEM` R package, such that
-$TPM_{i}=\frac{q_{i}/l_{i}}{\sum_{j}(q_{i}/l_{i})} * 10^{6}$ where
-$q_{i}$ denotes reads mapped to transcripts and $l_{i}$ is the transcript
-length. The gene expression level was mapped to the hg19 genome and
-generated RSEM gene expression data. The promoter region was defined as
-1500bp upstream and 500bp downstream from the transcription start site (TSS).
-A total of 21,010 genes (164,113 methylation probes) were tested. The below figure shows how the promoter regions were defined.
+The given methylation level was quantified and calculated as $\beta=\frac{\mu}{(M+U+\alpha)}$ where M and U denote the methylated and unmethylated signals, respectively, and $\alpha$ represents an offset value. The given gene expression level was quantified by TPM and normalized using the `RSEM` R package, such that $TPM_{i}=\frac{q_{i}/l_{i}}{\sum_{j}(q_{i}/l_{i})} * 10^{6}$ where $q_{i}$ denotes reads mapped to transcripts and $l_{i}$ is the transcript length. The gene expression level was mapped to the hg19 genome and generated RSEM gene expression data. The promoter region was defined as 1500bp upstream and 500bp downstream from the transcription start site (TSS). A total of 21,010 genes (164,113 methylation probes) were tested. The below figure shows how the promoter regions were defined.
 
 <center>
 
@@ -183,17 +173,18 @@ $$ Y_{ij} = \alpha_j + \beta_j X_{i} + \sum_{k=1}^K \gamma_{jk} Z_i + \epsilon_{
 Since the goal was to identify genes with differential methylation by tumor status, hypothesis tests were performed to select genes with significant $\beta_j$ coefficients for the null hypothesis $\beta_j = 0$ against the alternative $\beta_j \neq 0$ for each gene $j$. The significance level was selected to be $\alpha=0.2$ and the Benjamini-Hochberg correction was used to correct for multiple comparisons and control the false discovery rate. 
 
 
-### Bumphunter analysis-Differential methylation region
+### Bumphunter analysis - Differential methylation region
 
 We used the averaged methylation value of all CpGs within the promoter
 region of a gene to identify differential methylation between the tumor
 existence in bladder cancer. Using the `bumphunter` function adapted from
 the `minfi` R package, we obtained differential methylation regions
 (DMRs). The Bumphunter function searches for DMRs by looking for GpGs
-with mean differences.[4] The statistical model is:
-$$Y_{ij}=\beta_{0}(l_{j}) +\beta_{1}(l_{j})X_{j}+\varepsilon_{ij}$$ 
+with mean differences [16]. The statistical model is:
+$$Y_{ij}=\beta_{0}(l_{j}) +\beta_{1}(l_{j})X_{j}+\varepsilon_{ij}$$
 
-where $i$ denotes the subject, $l_{j}$ represents the $j$th location, $X_{j}$ is the covariate of interest, $\varepsilon_{ij}$ denotes error, $\beta_{0}$ denotes for baseline function and $\beta_{1}(l)$ is the parameter of interest. There are three steps: 1) creating clusters by t-statistical at each genomic location and a phenotype of interest, 2) breaking into segments by candidate region to be a cluster of probes, 3) test for the significance of the candidate region.  In this study, we used the covariates age and sex and the p-value adjusted FDR was below 0.05, and a change in methylation greater than 10% ($\Delta\beta > 0.1$) was used to identify a significant bump differential methylation region. 
+where $i$ denotes the subject, $l_{j}$ represents the $j$th location, $X_{j}$ is the covariate of interest, $\varepsilon_{ij}$ denotes error, $\beta_{0}$ denotes baseline function and $\beta_{1}(l)$ is the parameter of interest. There are three steps: 1) creating clusters by t-statistical at each genomic location and a phenotype of interest, 2) breaking into segments by candidate region to be a cluster of probes, 3) test for the significance of the candidate region.  In this study, we used the covariates age and sex and the p-value adjusted FDR was below 0.05, and a change in methylation greater than 10% ($\Delta\beta > 0.1$) was used to identify a significant bump differential methylation region.
+
 
 
 ```{r message=FALSE}
@@ -227,7 +218,7 @@ head(dmrs$table)
 
 ## Functional enrichment and network analysis
 
-Functional enrichment analysis using ConsensusPathDb (Release35, CPDB:http://cpdb.molgen.mpg.de/CPDB)[5] was used to interpret the functional role of a gene identified with differential methylation status. Both significant pathway and gene ontology (GO) terms were defined as having an adjusted p-value ($\leq 0.05$). We constructed a protein-protein interaction (PPI) network for the significant methylated genes by string DB (Version 11.5).[6] We selected the interaction relationship between genes with the highest confidence $> 0.9$. Pathway and GO term were visualized using the `ggplot2` R package (version 3.4.0).
+Functional enrichment analysis using ConsensusPathDb (Release35, CPDB:http://cpdb.molgen.mpg.de/CPDB) [17] was used to interpret the functional role of a gene identified with differential methylation status. Both significant pathway and gene ontology (GO) terms were defined as having an adjusted p-value ($\leq 0.05$). We constructed a protein-protein interaction (PPI) network for the significant methylated genes by string DB (Version 11.5) [18]. We selected the interaction relationship between genes with the highest confidence $> 0.9$. Pathway and GO term were visualized using the `ggplot2` R package (version 3.4.0).
 
 
 # Results
@@ -274,8 +265,6 @@ patient = patient[match(colnames(working.data[,-1]), patient$patient_id), ]
 
 ```
 
-Out of the 20,118 genes, 128 were identified to have differential methylation by tumor status. Most genes (119) had a negative coefficient indicating hypomethylation. The figure below shows a volcano plot of the unadjusted p-values against estimated $\beta_j$ values, colored by significance. 
-
 ```{r}
 
 # Limma -------------------------------------------------------------------
@@ -305,7 +294,7 @@ top.table$gene = genes.select
 
 ```
 
-```{r, fig.caption='Figure: Volcano plot for linear model analysis'}
+```{r, fig.cap='Figure 2a: Volcano plot for linear model analysis'}
 # volcano plot
 
 # get all results
@@ -328,6 +317,7 @@ gg_volcano = ggplot(all.res %>% mutate(P.Value = -log10(P.Value)),
 gg_volcano
 ```
 
+Out of the 20,118 genes, 128 were identified to have differential methylation by tumor status. Most genes (119) had a negative coefficient indicating hypomethylation. Figure 2a above shows a volcano plot of the unadjusted p-values against estimated $\beta_j$ values, colored by significance. 
 
 <!-- ```{r} -->
 <!-- # pca -->
@@ -340,7 +330,7 @@ gg_volcano
 <!-- ``` -->
 
 
-The 128 identified genes were further subsetted to the genes that were also in the gene expression data. For the resulting 113 genes, the figure below shows the average gene expression (log transformed) against estimated differential methylation values. There was a positive correlation (0.41), suggesting that at the gene level, larger differences in methylation (adjusted) were correlated with higher gene expression. These results may be un-intuitive since methylation is commonly associated with lower gene expression but these results may be due to lack of transcript-level data. It is also noteworthy that we are comparing gene expression with differences in methylation between tumor status groups, not methylation on the absolute scale.
+The 128 identified genes were further subsetted to the genes that were also in the gene expression data. For the resulting 113 genes, Figure 2b below shows the average gene expression (log transformed) against estimated differential methylation values. There was a positive correlation (0.41), suggesting that at the gene level, larger differences in methylation (adjusted) were correlated with higher gene expression. These results may be un-intuitive since methylation is commonly associated with lower gene expression but these results may be due to lack of transcript-level data. It is also noteworthy that we are comparing gene expression with differences in methylation between tumor status groups, not methylation on the absolute scale.
 
 ```{r}
 # read in gene expression data
@@ -378,7 +368,7 @@ mrna = mrna %>%
 #   labs(title='pca on transformed gene expression, 135 identified genes')
 ```
 
-```{r, fig.cap='Figure: Gene expression and estimated differential methylation according to linear model'}
+```{r, fig.cap='Figure 2b: Gene expression and estimated differential methylation according to linear model'}
 # correlation b/t gene expression and diff methylation
 mrna.avg = cbind(mrna$gene, rowMeans(mrna[,2:ncol(mrna)])) %>% as.data.frame()
 top.table.2 = top.table %>%
@@ -398,18 +388,18 @@ ggplot(data=dat, aes(x=diff_meth, y=gene_exp)) +
 
 ### Bumphunter
 
-A subset of 164,113 CpG methylation sites out of a total of 485,577 CpG sites was mapped to specific promoters (21,010 genes) for analysis. Differential methylation region was examined in the individual with a history of recurrence of tumor existence. The age and sex defined our study phenotype of interest. The 15 significant differential methylated regions were identified. With this region, there were predominately hypomethylated (n=13) in "With-Tumor" when compared to "Tumor-free."  This result corresponds to our `limma` significant differential methylation genes, and MOORE et al.[7] study, which showed global methylation in DNA from blood cells and leukocyte DNA hypomethylation was strongly associated with increased bladder cancer risk. In the DMR region, fifteen genes were identified, and fourteen were protein-coding genes. Eleven genes were strongly related to bladder cancer.  Nine genes overlap with the `limma` result. Below is a table of output from `bumphunter`.
+A subset of 164,113 CpG methylation sites out of a total of 485,577 CpG sites was mapped to specific promoters (21,010 genes) for analysis. Differential methylation regions were examined in the individuals with a history of recurrence of tumor existence. The age and sex defined our study phenotype of interest. The 15 significant differential methylated regions were identified. With this region, there were predominately hypomethylated (n=13) in "With-Tumor" when compared to "Tumor-free."  This result corresponds to our `limma` significant differential methylation genes, and MOORE et al. [19] study, which showed global methylation in DNA from blood cells and leukocyte DNA hypomethylation was strongly associated with increased bladder cancer risk. In the DMR region, 15 genes were identified, and 14 were protein-coding genes. Eleven genes were strongly related to bladder cancer.  Nine genes overlap with the `limma` result. Figure 3 below shows a table of output from `bumphunter`.
 
 <center>
 
 ![](image/table_bumphunter.png)
 
-**Figure 2**: Bumphunter output
+**Figure 3**: Bumphunter output
 </center>
 
 ## Functional enrichment analysis and network
 
-In an overrepresentation analysis of the combined set of both tools (`limma` and `bumphunter`), we identified 134 significant genes using ConsensusPathDB and revealed eight critical pathways (q-value < 0.1). (Figure 3) This includes multiple vascular formation-related pathways:  Myogenesis, CDC42 signaling events, Apoptotic cleavage of cell adhesion protein, and VEGFA-VEGFR2. Within the set of 134 differentially methylated genes, 10 Gene Ontology (GO) pathways were significantly over-represented (q-value < 0.05), including "G-protein-coupled serotonin receptor activity" (GO:0004993), "serotonin receptor activity" (GO:0099589)," Thiamine metabolic process" (GO:0006772), and "protein-containing complex scaffold activity" (GO:0032947) Figure x. The protein-protein interaction PPI) network constructed with the STRING database identified five genes with direct interaction (Figure 4). Four out of five genes are functionally grouped into the "Signaling by VEGF" pathway" (R-HSA-194138). The vascular endothelial growth factor (VEGF) pathway is highly associated with cancer that involves vasculogenesis and angiogenesis. Especially the most recent study reported that VEGF expression is associated with tumor grade and muscle-invasiveness of urinary bladder carcinoma when they evaluated immunohistochemical. [8]
+In an overrepresentation analysis of the combined set of both tools (`limma` and `bumphunter`), we identified 134 significant genes using ConsensusPathDB and revealed eight critical pathways (q-value < 0.1) (Figure 4a). This includes multiple vascular formation-related pathways:  Myogenesis, CDC42 signaling events, Apoptotic cleavage of cell adhesion protein, and VEGFA-VEGFR2. Within the set of 134 differentially methylated genes, 10 Gene Ontology (GO) pathways were significantly over-represented (q-value < 0.05), including "G-protein-coupled serotonin receptor activity" (GO:0004993), "serotonin receptor activity" (GO:0099589)," Thiamine metabolic process" (GO:0006772), and "protein-containing complex scaffold activity" (GO:0032947) (Figure 4b). The protein-protein interaction PPI) network constructed with the STRING database identified five genes with direct interaction (Figure 5). Four out of five genes are functionally grouped into the "Signaling by VEGF" pathway" (R-HSA-194138). The vascular endothelial growth factor (VEGF) pathway is highly associated with cancer that involves vasculogenesis and angiogenesis. Especially the most recent study reported that VEGF expression is associated with tumor grade and muscle-invasiveness of urinary bladder carcinoma when they evaluated immunohistochemical [20].
 
 <!-- <center> -->
 
@@ -448,13 +438,7 @@ newpath$Generatio <- newpath$V1/newpath$size
 newpath <- newpath  %>% as.data.frame
 ```
 
-```{r, fig.cap='Figure 3a: Functional study of combined 134 genes'}
-par(mfrow=c(1,2))
-
-
-
-# import package
-
+```{r}
 # create fake data
 set.seed(1024) # keep reproducibility
 go <- paste0("GO", sample(1000:2000, 5))
@@ -462,24 +446,9 @@ data <- data.frame("GOs" = rep(go, 2),
                    "Condition" = rep(c("A", "B"), each = 5),
                    "GeneRatio" = 1 / sample(10, 10),
                    "p.adjust" = 0.05 / sample(10, 10))
-
-
-# plot: Go
-
-
-ggplot(newgo, aes(x = newgo[,"term_category"], y = newgo[,"term_name"],
-	color = as.double(newgo[,2]), size = as.double(newgo[,"Generatio"]))) +
-	geom_point() +
-	scale_color_gradient(low = "red", high = "blue") +
-	theme_bw() +
-	ylab("") +
-  	xlab("") +
-   	ggtitle("GO enrichment analysis")+
-	labs(size="Generatio", colour="q-value")
 ```
 
-
-```{r, fig.cap='Figure 3b: Functional study of combined 134 genes'}
+```{r, fig.cap='Figure 4a: Functional study of combined 134 genes'}
 # plot: pathway
 
 ggplot(newpath, aes(x = pathwaynm , y = pathway,
@@ -494,18 +463,30 @@ ggplot(newpath, aes(x = pathwaynm , y = pathway,
 
 ```
 
+```{r, fig.cap='Figure 4b: Functional study of combined 134 genes'}
+# plot: Go
+ggplot(newgo, aes(x = newgo[,"term_category"], y = newgo[,"term_name"],
+	color = as.double(newgo[,2]), size = as.double(newgo[,"Generatio"]))) +
+	geom_point() +
+	scale_color_gradient(low = "red", high = "blue") +
+	theme_bw() +
+	ylab("") +
+  	xlab("") +
+   	ggtitle("GO enrichment analysis")+
+	labs(size="Generatio", colour="q-value")
+```
 
 <center>
 
 ![](image/ppi.png)
 
-**Figure 4**:First Protein-protein interaction network of combined 134 genes
+**Figure 5**:First Protein-protein interaction network of combined 134 genes
 </center>
 
 
 ## Case study
 
-As described above, our differential methylated genes were enriched in pathways related to VEGF signaling. As a case study, we selected a gene for functional analysis, CDH5. CDH5 gene is known to play a role as cadherin and promotes tumor cell proliferation and invasion.[9] CDH5 is not yet studied deeply in bladder cancer, but this gene is a well-known biomarker in breast cancer cells, stimulates TGF-B signaling, and is associated with urinary exosomes.[10] In this study, we identified CDH5 as hypomethylated compared to the tumor-free group, and gene expression statistically increased.
+As described above, our differential methylated genes were enriched in pathways related to VEGF signaling. As a case study, we selected a gene for functional analysis, CDH5. CDH5 gene is known to play a role as cadherin and promotes tumor cell proliferation and invasion [21]. CDH5 is not yet studied deeply in bladder cancer, but this gene is a well-known biomarker in breast cancer cells, stimulates TGF-B signaling, and is associated with urinary exosomes [22]. In this study, we identified CDH5 as hypomethylated compared to the tumor-free group, and gene expression statistically increased.
 
 <!-- <center> -->
 
@@ -515,7 +496,7 @@ As described above, our differential methylated genes were enriched in pathways 
 <!-- </center> -->
 
 
-```{r, fig.cap='Figure 4a: CDH5'}
+```{r, fig.cap='Figure 6a: CDH5'}
 #geneset <- c("PRKCZ","CDH5","CTNNB1","APC2","TLE2") #This is the geneset that you want to print 
 geneset <- c("CDH5") # Here, we want one. 
 load("grset")
@@ -550,7 +531,7 @@ ggplot(combine.mat, aes(x=combine.mat$group, y=as.double(combine.mat$mean_of_bet
 
 ```
 
-```{r, fig.cap='Figure 4b: CDH5'}
+```{r, fig.cap='Figure 6b: CDH5'}
 
 #Correlation plot for CDH5
 for (i in 1:length(geneset)){
@@ -584,33 +565,63 @@ ggplot(combinedall, aes(x=as.double(combinedall$beta), y=as.double(combinedall$e
 
 # Discussion
 
-This study used several different methods to identify genes where patients with and without a bladder cancer tumor have differential levels of methylation. However, these results did not necessarily agree with each other or with the existing literature. The analysis using gene-level linear models (`limma`) identified 128 genes, whereas the analysis using the `bumphunter` R package identified 15 regions where most showed hypomethylation. A functional enrichment analysis found… The existing literature, however, identified gene promoter regions with hypermethylation26-28.
+This study used two linear model algorithms (`limma` and `bumphunter`) to investigate differentially methylated genes in bladder recurrence. The analysis using gene-level linear models identified 128 genes, whereas the `bumphunter` R package identified 15 regions where most showed hypomethylation in both cases. Both hypomethylation and hypermethylation may occur in tumorigenesis bladder. In our case, hypomethylation was detected the most (90%). We expected oncogenes had been characterized; however, it was not correlated with gene expression statistically. There are several limitations to this result. First, the definitions of tumor status were coarse and may not adequately capture the biological constructs of interest. As noted earlier, tumor-free status describes a point in time; patients that are currently tumor-free may have a recurrence later. A time-to-event analysis that follows patients for a period of time and measures the durations of tumor and tumor-free status may be beneficial. Additionally, due to a lack of data availability, we did not consider cancer stage, tumor invasion, or treatment, which may affect the association of methylation and tumor status. 
 
-There are several limitations to this study. First, the definitions of tumor status were coarse and may not adequately capture the biological constructs of interest. As noted earlier, tumor-free status describes a point in time; patients that are currently tumor-free may have a recurrence later. A time-to-event analysis that follows patients for a period of time and measures the durations of tumor and tumor-free status may be beneficial. Additionally, due to a lack of data availability, we did not consider cancer stage or treatment, which may affect the association of methylation and tumor status.
+Second, we used the RSEM gene expression data already pre-processed in cBio-Portal. Due to the nature of biology, defining promoters in this way may be inadequate since there are many isoforms, and the promoter can change locations. Therefore, we suggest further statistical analysis starting from raw data (ex., fastq/ bam) to extract counts in transcript level or transcription TPM value. This study was inherently exploratory since associations were examined. It is unclear how these results would generalize to other populations or if the association of methylation and tumor status is confounded by some variables not included in the analysis. 
 
-Lack of gene expression data at the transcript level was another limitation. In this study, transcript promoters were defined to be 1500bp upstream from the TSS and 500bp downstream of each transcript promoter region. However, defining promoters in this way may be inadequate since there are many isoforms and the promoter can change locations.
-
-This study was inherently exploratory since associations were examined. It is unclear how these results would generalize to other populations or if the association of methylation and tumor status is confounded by some variable not included in the analysis.
-
-Future work may use richer datasets and different analyses to address the above limitations.
+We performed the gene enrichment analysis, and most genes were related to VEGF signaling pathways. VEGF pathway represents one of the promotes tumor angiogenesis cytokines and regulates the signal transmission for multiple cellular functions. VEGFs are also the most common class of therapeutic targets. Thus, pertinent to the findings of this study, VEGF plays multiple roles in cancer development and has been the focus of past studies to define differences in the reoccurrence of bladder cancer, primarily those originating only from NMIBC. Therefore, these alternative approaches and further studies may reveal more underlying molecular mechanisms contributing to bladder cancer recurrence. 
 
 
 # Conclusion
 
-Using publicly available clinical and genetic tumor data from 368 patients with bladder urothelial cancer, we performed differential methylation analysis using limma and bumphunter. We identified differentially methylated genes by tumor status and performed functional enrichment analysis. Fifteen genes were identified, fourteen of which were protein-coding genes. Eleven genes were strongly related to bladder cancer and nine of these genes overlap with our limma results. We intersected this with RNA-seq expression data and identified 134 significant genes using ConsensusPathDB and revealed eight critical pathways, the most compelling being the VEGFA-VEGFR2 pathway. Using the STRING database, we constructed a protein-protein interaction (PPI) network and identified four genes functionally grouped into the VEGFA-VEGFR2  pathway. 
+High mutation rates in many cancer-related genes characterize bladder cancer, and the high recurrence rates are the most challenging for patient treatment. In this genome-wide profiling methylation study in recurrence bladder cancer, we found 134 differentially methylated genes in the recurrence status of bladder cancer. Over 90% of genes were hypomethylated, and these genes are highly associated with VEGF signaling pathways. Although most of our genes were negatively correlated with gene expression, further studies are necessary due to our limitations listed above. 
 
 
 # References
 
+[1]    C. Martin et al., “Familial Cancer Clustering in Urothelial Cancer: A Population-Based Case-Control Study,” J. Natl. Cancer Inst., vol. 110, no. 5, pp. 527–533, May 2018.
 
+[2]    F. Turati et al., “Family history of cancer and the risk of bladder cancer: A case-control study from Italy,” Cancer Epidemiol., vol. 48, pp. 29–35, Jun. 2017.
 
+[3]    E. Y.-W. Yu et al., “Family History and Risk of Bladder Cancer: An Analysis Accounting for First- and Second-degree Relatives,” Cancer Prev. Res. , vol. 15, no. 5, pp. 319–326, May 2022.
 
+[4]    S. Li, M. R. Karagas, B. P. Jackson, M. N. Passarelli, and J. Gui, “Adaptive-mixture-categorization (AMC)-based g-computation and its application to trace element mixtures and bladder cancer risk,” Sci. Rep., vol. 12, no. 1, p. 17841, Oct. 2022.
 
+[5]    D. S. Michaud, M. E. Wright, K. P. Cantor, P. R. Taylor, J. Virtamo, and D. Albanes, “Arsenic concentrations in prediagnostic toenails and the risk of bladder cancer in a cohort study of male smokers,” Am. J. Epidemiol., vol. 160, no. 9, pp. 853–859, Nov. 2004.
 
+[6]    J. Dobruch et al., “Gender and Bladder Cancer: A Collaborative Review of Etiology, Biology, and Outcomes,” Eur. Urol., vol. 69, no. 2, pp. 300–310, Feb. 2016.
 
+[7]    J. M. Sung et al., “Racial and Socioeconomic Disparities in Bladder Cancer Survival: Analysis of the California Cancer Registry,” Clin. Genitourin. Cancer, vol. 17, no. 5, pp. e995–e1002, Oct. 2019.
 
+[8]    A. R. A. H. Hamid, F. R. Ridwan, D. Parikesit, F. Widia, C. A. Mochtar, and R. Umbas, “Meta-analysis of neoadjuvant chemotherapy compared to radical cystectomy alone in improving overall survival of muscle-invasive bladder cancer patients,” BMC Urol., vol. 20, no. 1, p. 158, Oct. 2020.
 
+[9]    S. Byun et al., “Differential methylation of G-protein coupled receptor signaling genes in gastrointestinal neuroendocrine tumors,” Sci. Rep., vol. 11, no. 1, p. 12303, Jun. 2021.
 
+[10]    M. Shivakumar, S. Han, Y. Lee, and D. Kim, “Epigenetic interplay between methylation and miRNA in bladder cancer: focus on isoform expression,” BMC Genomics, vol. 22, no. Suppl 3, p. 754, Oct. 2021.
+
+[11]    M. Shivakumar, Y. Lee, L. Bang, T. Garg, K.-A. Sohn, and D. Kim, “Identification of epigenetic interactions between miRNA and DNA methylation associated with gene expression as potential prognostic markers in bladder cancer,” BMC Med. Genomics, vol. 10, no. Suppl 1, p. 30, May 2017.
+
+[12]    X. Chen et al., “Urine DNA methylation assay enables early detection and recurrence monitoring for bladder cancer,” J. Clin. Invest., vol. 130, no. 12, pp. 6278–6289, Dec. 2020.
+
+[13]    R. L. Grossman et al., “Toward a Shared Vision for Cancer Genomic Data,” New England Journal of Medicine, vol. 375, no. 12. pp. 1109–1112, 2016. doi: 10.1056/nejmp1607591.
+
+[14]    J. Gao et al., “Integrative analysis of complex cancer genomics and clinical profiles using the cBioPortal,” Sci. Signal., vol. 6, no. 269, p. l1, Apr. 2013.
+
+[15]    X. Shen, R. Liu, and M. Xing, “A six-genotype genetic prognostic model for papillary thyroid cancer,” Endocr. Relat. Cancer, vol. 24, no. 1, pp. 41–52, Jan. 2017.
+
+[16]    A. E. Jaffe et al., “Bump hunting to identify differentially methylated regions in epigenetic epidemiology studies,” Int. J. Epidemiol., vol. 41, no. 1, pp. 200–209, Feb. 2012.
+
+[17]    A. Kamburov, U. Stelzl, H. Lehrach, and R. Herwig, “The ConsensusPathDB interaction database: 2013 update,” Nucleic Acids Res., vol. 41, no. Database issue, pp. D793–800, Jan. 2013.
+
+[18]    D. Szklarczyk et al., “The STRING database in 2017: quality-controlled protein–protein association networks, made broadly accessible,” Nucleic Acids Res., vol. 45, no. D1, pp. D362–D368, Oct. 2016.
+
+[19]    L. E. Moore et al., “Genomic DNA hypomethylation as a biomarker for bladder cancer susceptibility in the Spanish Bladder Cancer Study: a case-control study,” Lancet Oncol., vol. 9, no. 4, pp. 359–366, Apr. 2008.
+
+[20]    A. Sadaf, M. Z. Rahman, P. Bhattacharjee, M. S. U. Ahamad, and S. Nasreen, “Significance of Vascular Endothelial Growth Factor Expression in the Bladder Urothelial Carcinoma and Its Association with Tumor Grade and Invasiveness,” Iran J Pathol, vol. 16, no. 4, pp. 362–369, Jul. 2021.
+
+[21]    M. Inokuchi et al., “Cadherin 5 Is a Significant Risk Factor for Hematogenous Recurrence and a Prognostic Factor in Locally Advanced Gastric Cancer,” Anticancer Res., vol. 37, no. 12, pp. 6807–6813, Dec. 2017.
+
+[22]    M. Telfah, R. A. Parikh, D. Zhang, and A. Kasi, “Metastatic Plasmacytoid Bladder Cancer Harboring a CDH-1 Mutation and Producing High Levels of CA 19-9. A Case Report and Literature Review,” Am. J. Case Rep., vol. 21, p. e923130, Jul. 2020.
 
 
 
